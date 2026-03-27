@@ -1046,6 +1046,46 @@ body {
     text-decoration: none;
 }
 
+.footer-social {
+    text-align: center;
+}
+
+.footer-social-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.footer-social-icons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.footer-social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--dark-surface);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.footer-social-icons a:hover {
+    color: var(--green);
+    border-color: var(--green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--green-glow);
+}
+
 /* ============================
    Reveal Animations
    ============================ */
