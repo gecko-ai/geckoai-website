@@ -41,11 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ----- Savings Calculator -----
     const calcState = {
+        importKwh: 4500,
+        exportKwh: 2000,
         battery: 10,
-        solar: 'yes',
+        panels: 12,
         ev: 'yes',
-        tariff: 'tou'
+        tariff: 'standard'
     };
+
+    // Handle number inputs
+    document.querySelectorAll('.calc-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value) || 0;
+            if (e.target.id === 'calcImport') calcState.importKwh = val;
+            if (e.target.id === 'calcExport') calcState.exportKwh = val;
+            if (e.target.id === 'calcPanels') calcState.panels = val;
+            updateCalculator();
+        });
+    });
 
     // Handle option clicks
     document.querySelectorAll('.calc-options').forEach(group => {
@@ -61,35 +74,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateCalculator() {
-        // Simple estimation model based on typical UK battery/solar setups
-        let baseWaste = 300; // base annual waste for any unoptimised setup
+        const importKwh = calcState.importKwh;
+        const exportKwh = calcState.exportKwh;
         
-        // Battery size impact
+        // 1. Current Cost Calculation
+        let currentImportRate = 0.24; // 24p standard
+        let currentExportRate = 0.04; // 4p standard
+        
+        if (calcState.tariff === 'ev') {
+            currentImportRate = 0.15; // Blended EV rate
+        } else if (calcState.tariff === 'agile') {
+            currentImportRate = 0.18; // Blended Agile rate
+            currentExportRate = 0.06; // Slightly better standard export
+        }
+        
+        // If they have an EV but are on standard tariff, they overpay significantly
+        if (calcState.ev === 'yes' && calcState.tariff !== 'ev') {
+            currentImportRate = 0.25;
+        }
+
+        const currentCost = (importKwh * currentImportRate) - (exportKwh * currentExportRate);
+        const actualCost = Math.max(0, currentCost); // Can't have negative current bill in simple model
+        
+        // 2. Gecko Ideal Scenario
+        // Gecko shifts import to off-peak (avg 8p) and export to peak (avg 12p)
+        let idealImportRate = 0.08;
+        const idealExportRate = 0.12;
+        
+        // Penalty for smaller batteries unable to shift entirely to off-peak
         const batterySize = parseInt(calcState.battery);
-        if (batterySize >= 13) baseWaste += 250;
-        else if (batterySize >= 10) baseWaste += 200;
-        else if (batterySize >= 5) baseWaste += 120;
+        if (batterySize < 10) idealImportRate = 0.10;
+        if (batterySize < 5) idealImportRate = 0.12;
 
-        // Solar adds export optimisation opportunity
-        if (calcState.solar === 'yes') baseWaste += 100;
-
-        // EV adds off-peak charging opportunity
-        if (calcState.ev === 'yes') baseWaste += 150;
-
-        // Tariff impact
-        if (calcState.tariff === 'fixed') baseWaste += 80;
-        else if (calcState.tariff === 'unsure') baseWaste += 60;
-        else if (calcState.tariff === 'agile') baseWaste -= 40;
-
-        // Gecko can save ~70% of waste
-        const savings = Math.round(baseWaste * 0.70);
+        const idealCost = (importKwh * idealImportRate) - (exportKwh * idealExportRate);
         
-        // Estimate monthly bill
-        const avgMonthlyBill = 95 + Math.round(baseWaste / 24);
-        const optimisedMonthly = avgMonthlyBill - Math.round(savings / 12);
+        // 3. Waste & Savings Calculation
+        let totalWaste = currentCost - idealCost;
+        if (totalWaste < 0) totalWaste = 0; // Already optimal
+        
+        // Gecko saves 90% of the wasted potential
+        const savings = Math.round(totalWaste * 0.90);
+        const displayWaste = Math.round(totalWaste);
+        
+        // Estimate monthly bill (Add ~£180/year for standing charges to base cost)
+        const annualBill = actualCost + 180;
+        const avgMonthlyBill = Math.round(annualBill / 12);
+        const optimisedMonthly = Math.max(0, avgMonthlyBill - Math.round(savings / 12));
 
         // Animate values
-        animateValue('wasteValue', `£${baseWaste}`);
+        animateValue('wasteValue', `£${displayWaste}`);
         animateValue('saveValue', `£${savings}`);
         document.getElementById('billFrom').textContent = `£${avgMonthlyBill}`;
         document.getElementById('billTo').textContent = `£${optimisedMonthly}`;

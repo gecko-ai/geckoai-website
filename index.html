@@ -20,7 +20,7 @@
     <nav class="nav" id="nav">
         <div class="nav-container">
             <a href="#top" class="nav-logo">
-                <span class="logo-gecko">Gecko</span><span class="logo-ai">AI</span>
+                <img src="gecko-logo.png" alt="Gecko AI" class="nav-logo-img">
             </a>
             <div class="nav-links" id="navLinks">
                 <a href="#problem">The Problem</a>
@@ -39,8 +39,8 @@
     <section class="hero" id="top">
         <div class="hero-glow"></div>
         <div class="hero-content">
-            <div class="hero-badge">🇬🇧 Built for UK homes with solar &amp; battery</div>
-            <h1>Cut your energy bills by up to <span class="text-green">50%</span> — automatically</h1>
+            <div class="hero-badge">Built for UK homes with Solar PV Systems</div>
+            <h1>Cut your energy costs by up to <span class="text-green">£1,000</span>. Powered by Gecko</h1>
             <p class="hero-sub">Gecko AI connects your solar, battery, EV and tariff into one intelligent system that saves you money every single day — without lifting a finger.</p>
             <div class="hero-actions">
                 <a href="#waitlist" class="btn btn-primary">Join the Waitlist</a>
@@ -53,13 +53,13 @@
                 </div>
                 <div class="hero-stat-divider"></div>
                 <div class="hero-stat">
-                    <span class="hero-stat-value">11</span>
-                    <span class="hero-stat-label">UK households already optimised</span>
+                    <span class="hero-stat-value">11+</span>
+                    <span class="hero-stat-label">UK households and growing in Beta</span>
                 </div>
                 <div class="hero-stat-divider"></div>
                 <div class="hero-stat">
-                    <span class="hero-stat-value">6</span>
-                    <span class="hero-stat-label">Solar forecast sources blended by AI</span>
+                    <span class="hero-stat-value">50+</span>
+                    <span class="hero-stat-label">Tariff combinations analysed for optimal savings</span>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                 <div class="problem-card">
                     <div class="problem-icon">💷</div>
                     <h3>Stuck on the wrong tariff</h3>
-                    <p>Energy companies launch better deals constantly. You're probably overpaying right now and don't even know it.</p>
+                    <p>With 140+ tariff combinations out there, it's almost impossible to keep up. You're probably overpaying right now.</p>
                 </div>
                 <div class="problem-card">
                     <div class="problem-icon">📉</div>
@@ -137,13 +137,33 @@
                 <div class="solution-card">
                     <div class="solution-icon">🔌</div>
                     <h3>Works With Your Kit</h3>
-                    <p>GivEnergy, Fox ESS, Sigen, Tesla (coming soon) — Gecko integrates with the inverters you already own.</p>
+                    <p>GivEnergy, Fox ESS, Sigen — Gecko integrates with the inverters you already own.</p>
                 </div>
                 <div class="solution-card">
                     <div class="solution-icon">🧠</div>
                     <h3>Self-Learning AI</h3>
                     <p>Gecko learns your household patterns — EV charging days, seasonal habits, export losses — and gets smarter every single week.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founder Video -->
+    <section class="section section-video">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Founder Story</span>
+                <h2>Hear it from the <span class="text-green">founders</span></h2>
+            </div>
+            <div class="video-wrapper reveal">
+                <iframe
+                    src="https://www.youtube.com/embed/vkBiVyoCR98"
+                    title="Gecko AI Founder Story"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
             </div>
         </div>
     </section>
@@ -188,11 +208,19 @@
         <div class="container">
             <div class="section-header reveal">
                 <span class="section-tag">Savings Calculator</span>
-                <h2>You could be wasting <span class="text-green">£500+/year</span> — check in 30 seconds</h2>
+                <h2>You could be wasting around <span class="text-green">£500+/year</span> — check in 30 seconds</h2>
                 <p class="section-sub">See how much your setup is costing you by not optimising it.</p>
             </div>
             <div class="calc-container reveal">
                 <div class="calc-form" id="calcForm">
+                    <div class="calc-group">
+                        <label>2025 Import (kWh)</label>
+                        <input type="number" id="calcImport" class="calc-input" placeholder="e.g. 4500" value="4500">
+                    </div>
+                    <div class="calc-group">
+                        <label>2025 Export (kWh)</label>
+                        <input type="number" id="calcExport" class="calc-input" placeholder="e.g. 2000" value="2000">
+                    </div>
                     <div class="calc-group">
                         <label>Battery size</label>
                         <div class="calc-options" data-field="battery">
@@ -203,11 +231,8 @@
                         </div>
                     </div>
                     <div class="calc-group">
-                        <label>Solar panels?</label>
-                        <div class="calc-options" data-field="solar">
-                            <button class="calc-option active" data-value="yes">Yes</button>
-                            <button class="calc-option" data-value="no">No</button>
-                        </div>
+                        <label>Solar panels</label>
+                        <input type="number" id="calcPanels" class="calc-input" placeholder="Number of panels (estimate if unknown)" value="12">
                     </div>
                     <div class="calc-group">
                         <label>EV charger?</label>
@@ -217,11 +242,11 @@
                         </div>
                     </div>
                     <div class="calc-group">
-                        <label>Current tariff type</label>
+                        <label>Current tariff</label>
                         <div class="calc-options" data-field="tariff">
-                            <button class="calc-option" data-value="fixed">Fixed rate</button>
-                            <button class="calc-option active" data-value="tou">Time-of-use</button>
-                            <button class="calc-option" data-value="agile">Agile/Variable</button>
+                            <button class="calc-option active" data-value="standard">Standard / Fixed</button>
+                            <button class="calc-option" data-value="ev">EV / Time-of-use (e.g. Intelligent Go)</button>
+                            <button class="calc-option" data-value="agile">Agile / Tracker</button>
                             <button class="calc-option" data-value="unsure">Not sure</button>
                         </div>
                     </div>
@@ -309,10 +334,7 @@
                     <div class="compat-logo">Sigen</div>
                     <span class="compat-status live">Live</span>
                 </div>
-                <div class="compat-item">
-                    <div class="compat-logo">Tesla</div>
-                    <span class="compat-status coming">Coming Soon</span>
-                </div>
+
                 <div class="compat-item">
                     <div class="compat-logo">Octopus Energy</div>
                     <span class="compat-status live">Live</span>
@@ -361,7 +383,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <span class="logo-gecko">Gecko</span><span class="logo-ai">AI</span>
+                    <img src="gecko-logo.png" alt="Gecko AI" class="footer-logo-img">
                     <p>Smarter energy. Greener living. Bigger savings.</p>
                 </div>
                 <div class="footer-links">
