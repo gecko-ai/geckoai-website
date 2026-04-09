@@ -1042,6 +1042,10 @@ body {
 .footer-links {
     display: flex;
     gap: 32px;
+    align-self: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
 }
 
 .footer-links a {
