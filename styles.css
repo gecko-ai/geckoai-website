@@ -86,7 +86,9 @@ body {
 .nav-logo {
     text-decoration: none;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    gap: 8px;
 }
 
 .nav-logo-img {
@@ -100,11 +102,34 @@ body {
     transform: scale(1.05);
 }
 
+.nav-logo-text {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    display: inline-block;
+}
+
+.logo-gecko {
+    color: #ffffff !important;
+}
+
+.logo-ai {
+    color: #8899aa !important;
+}
+
+.footer-logo-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
 .footer-logo-img {
-    height: 70px;
+    height: 60px;
     width: auto;
     display: block;
-    margin-bottom: 16px;
 }
 
 .nav-links {
