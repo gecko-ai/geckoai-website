@@ -417,5 +417,95 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <!-- Edit Mode -->
+    <script>
+    (function() {
+        const PASS = 'gecko2024';
+        const STORAGE_KEY = 'geckoai_edits';
+
+        // Floating edit button
+        const btn = document.createElement('button');
+        btn.id = 'edit-mode-btn';
+        btn.textContent = '✏️ Edit';
+        btn.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#6cc221;color:#fff;border:none;border-radius:30px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.3);font-family:Inter,sans-serif;';
+        document.body.appendChild(btn);
+
+        let editMode = false;
+        const SELECTORS = 'h1, h2, h3, h4, h5, p, li, .hero-badge, .nav-cta, a.btn, button.btn, .stat-number, .stat-label, label';
+
+        // Restore saved edits on load
+        function restoreEdits() {
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            document.querySelectorAll('[data-edit-id]').forEach(el => {
+                const id = el.dataset.editId;
+                if (saved[id]) el.innerHTML = saved[id];
+            });
+        }
+
+        // Assign data-edit-id to all editable elements
+        function assignIds() {
+            let i = 0;
+            document.querySelectorAll(SELECTORS).forEach(el => {
+                if (!el.dataset.editId) el.dataset.editId = 'edit-' + (i++);
+            });
+        }
+
+        function saveEdit(el) {
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            saved[el.dataset.editId] = el.innerHTML;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        }
+
+        function enableEdit() {
+            document.querySelectorAll(SELECTORS).forEach(el => {
+                el.contentEditable = 'true';
+                el.style.outline = '2px dashed #6cc221';
+                el.style.borderRadius = '3px';
+                el.addEventListener('input', () => saveEdit(el));
+            });
+            btn.textContent = '💾 Done Editing';
+            btn.style.background = '#e74c3c';
+            editMode = true;
+        }
+
+        function disableEdit() {
+            document.querySelectorAll(SELECTORS).forEach(el => {
+                el.contentEditable = 'false';
+                el.style.outline = '';
+                el.style.borderRadius = '';
+            });
+            btn.textContent = '✏️ Edit';
+            btn.style.background = '#6cc221';
+            editMode = false;
+        }
+
+        btn.addEventListener('click', () => {
+            if (!editMode) {
+                const pass = prompt('Enter edit password:');
+                if (pass !== PASS) { alert('Incorrect password'); return; }
+                enableEdit();
+            } else {
+                disableEdit();
+            }
+        });
+
+        // Add reset button (hidden — triple-click the edit button)
+        let clickCount = 0;
+        btn.addEventListener('dblclick', () => {
+            clickCount++;
+            if (clickCount >= 2) {
+                if (confirm('Reset all text edits to original?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    location.reload();
+                }
+                clickCount = 0;
+            }
+        });
+
+        assignIds();
+        restoreEdits();
+    })();
+    </script>
 </body>
 </html>
