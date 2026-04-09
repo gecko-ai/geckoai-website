@@ -99,9 +99,8 @@ body {
 }
 
 .nav-logo-icon {
-    height: 44px;
-    width: auto;
-    max-width: 40px;
+    height: 48px;
+    width: 48px;
     display: block;
     object-fit: contain;
     transition: var(--transition);
