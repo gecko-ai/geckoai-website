@@ -455,6 +455,7 @@ body {
     border-radius: var(--radius);
     padding: 36px;
     transition: var(--transition);
+    text-align: center;
 }
 
 .problem-card:hover {
@@ -532,6 +533,7 @@ body {
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    text-align: center;
 }
 
 .solution-card::before {
@@ -753,6 +755,28 @@ body {
     width: 100%;
 }
 
+.calc-result-cta {
+    width: 100%;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.calc-result-cta p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.calc-cta-btn {
+    padding: 12px 28px;
+    font-size: 0.9rem;
+}
+
 .calc-email-capture {
     width: 100%;
     padding-top: 12px;
@@ -882,9 +906,15 @@ body {
     color: var(--green);
 }
 
-.compat-status.coming {
+.compat-status.coming,
+.compat-status.coming-soon {
     background: rgba(255, 255, 255, 0.06);
     color: var(--text-muted);
+}
+
+.compat-item-soon {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 /* ============================
@@ -1194,6 +1224,11 @@ body {
 
     .problem-grid {
         grid-template-columns: 1fr;
+    }
+
+    .problem-card,
+    .solution-card {
+        text-align: center;
     }
 
     .solution-grid {

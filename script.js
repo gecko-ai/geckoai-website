@@ -12,20 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    // ----- Mobile Nav Toggle -----
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
-    navToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('open');
-        navToggle.classList.toggle('active');
-    });
-    // Close mobile nav on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('open');
-            navToggle.classList.remove('active');
-        });
-    });
+    // Mobile Nav Toggle removed
 
     // ----- Scroll Reveal -----
     const reveals = document.querySelectorAll('.reveal');
@@ -141,19 +128,30 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCalculator();
 
     // ----- Form Submissions -----
-    document.getElementById('calcEmailForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('calcEmail').value;
-        showToast('Thanks! We\'ll send your personalised savings report soon.');
-        document.getElementById('calcEmail').value = '';
-    });
-
     document.getElementById('waitlistForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const email = document.getElementById('waitlistEmail').value;
-        showToast('You\'re on the list! We\'ll be in touch when Gecko AI launches.');
-        document.getElementById('waitlistEmail').value = '';
+        const btn = e.target.querySelector('button');
+        const originalText = btn.textContent;
+        btn.textContent = 'Joining...';
+        btn.disabled = true;
+
+        fetch('https://services.leadconnectorhq.com/hooks/M7JkoJBPHnn2bk3h960n/webhook-trigger/bd15e1c4-e6d5-40e8-ad3e-418930d2cdea', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, source: 'Gecko AI Website Waitlist' })
+        }).then(() => {
+            showToast('You\'re on the list! We\'ll be in touch when Gecko AI launches.');
+            document.getElementById('waitlistEmail').value = '';
+        }).catch((err) => {
+            console.error('Webhook Error:', err);
+            showToast('Oops, something went wrong. Please try again or email us.');
+        }).finally(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        });
     });
+
 
     // ----- Toast Notification -----
     function showToast(message) {
